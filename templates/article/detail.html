@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    {{ article.title }}
+{% endblock title %}
+
+{% block content %}
+
+    <div class="col-mb-12 col-8" id="main" role="main">
+        <article class="post" itemscope="" itemtype="https://schema.org/BlogPosting">
+            <h1 class="post-title" itemprop="name headline">
+                <a itemprop="url" href="{% url 'article:article_detail' article.slug %}">{{ article.title }}</a>
+            </h1>
+            <ul class="post-meta">
+                <li itemprop="author" itemscope="" itemtype="https://schema.org/Person">
+                    作者: <a itemprop="name" href="{% url 'article:list-author' article.author.id %}"
+                             rel="author">{{ article.author }}</a>
+                </li>
+                <li>时间:
+                    <time datetime="{{ article.created | time }}"
+                          itemprop="datePublished">{{ article.created|date:'Y-m-d' }}</time>
+                </li>
+                <li>分类: <a href="{% url 'article:list-category' article.category.slug %}">{{ article.category }}</a></li>
+            </ul>
+            <div class="post-content" itemprop="articleBody" id="content">
+                {{ article.body | safe }}</div>
+            <p itemprop="keywords" class="tags">标签:
+                {% for keyword in article.keywords.all %}
+                    <a href="{% url 'article:list-tag' keyword %}">{{ keyword }}</a>
+                    {% if forloop.counter != forloop.last %},{% endif %}
+                {% endfor %}
+            </p>
+        </article>
+        {% include 'article/comment.html' %}
+        <ul class="post-near">
+            {% if article.get_pre %}
+                <li>上一篇: <a href="{% url 'article:article_detail' article.get_pre.slug %}"
+                               title="{{ article.get_pre.title }}">{{ article.get_pre.title }}</a></li>
+            {% else %}
+                <li>上一篇: 没有了</li>
+            {% endif %}
+            {% if article.get_next %}
+                <li>下一篇: <a href="{% url 'article:article_detail' article.get_next.slug %}"
+                               title="{{ article.get_next.title }}">{{ article.get_next.title }}</a></li>
+            {% else %}
+                <li>下一篇: 没有了</li>
+            {% endif %}
+        </ul>
+    </div>
+    {% include 'article/sidebar.html' %}
+{% endblock content %}

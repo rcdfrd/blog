@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'css/grid.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'md_css/default.css' %}">
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon"/>
+    <!--[if lte IE 8]>
+        <script src="{% static 'ie/html5shiv.min.js' %}"></script>
+        <script src="{% static 'ie/respond.min.js' %}"></script>
+    <![endif]-->
+
+
+    {% block description %}
+    {% endblock description %}
+    {% block keywords %}
+    {% endblock keywords %}
+</head>
+<body>
+{% include 'header.html' %}
+<!-- 预留具体页面的位置 -->
+<div id="body">
+    <div class="container">
+        <div class="row">
+            {% block content %}{% endblock content %}
+        </div><!-- end .row -->
+    </div><!-- end .container -->
+</div><!-- end #body -->
+
+</body>
+
+{% include 'footer.html' %}
+
+</html>

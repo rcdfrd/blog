@@ -1,0 +1,65 @@
+{% load article_tags %}
+{% load comment_tags %}
+{% load static %}
+<div class="col-mb-12 col-offset-1 col-3 kit-hidden-tb" id="secondary" role="complementary">
+    <section class="widget">
+        <h3 class="widget-title">最新文章</h3>
+        <ul class="widget-list">
+            {% get_latest_articles as latest_articles %}
+            {% for article in latest_articles %}
+                <li><a href="{% url 'article:article_detail' article.slug %}">{{ article.title }}</a></li>
+            {% endfor %}
+
+        </ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近回复</h3>
+        <ul class="widget-list">
+            {% get_latest_comments as latest_comments %}
+            {% for comment in latest_comments %}
+                <li>
+                    <a href="{{ comment.get_absolute_url }}#comments">{{ comment.author }}</a>
+                    : {{ comment.body }}
+                </li>
+            {% endfor %}
+
+        </ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+        <ul class="widget-list">
+            {% get_categories as categories %}
+            {% for category in categories %}
+                <li class="category-level-0 category-parent"><a
+                        href="{% url 'article:list-category' category.slug %}">{{ category }}</a></li>
+                </ul>
+            {% endfor %}
+
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">归档</h3>
+        <ul class="widget-list">
+            {% get_month_date as data_date %}
+            {% for date in data_date %}
+                <li><a href="{% url 'article:list-date' date|date:'Y' date|date:'m' %}">{{ date|date:'Y M' }}</a></li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            {% if user.is_authenticated %}
+                <li class="last"><a href="{% url 'admin:index' %}">进入后台</a></li>
+                <li><a href="{% url 'userprofile:logout' %}">退出</a></li>
+            {% else %}
+                <li class="last"><a href="">登录</a>
+            {% endif %}
+            <li><a href="{% url 'article:rss' %}">文章 RSS</a></li>
+        </ul>
+    </section>
+
+</div><!-- end #sidebar -->

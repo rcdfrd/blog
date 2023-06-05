@@ -1,0 +1,32 @@
+{% load article_tags %}
+{% load static %}
+<!-- Header -->
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="row">
+            <div class="site-name col-mb-12 col-9">
+                <a id="logo" href="{% url 'article:article_list' %}">
+{#                    <img src="static/picture/6bb6ba3ca2a26bccb136001da202f781.jpg" alt="rcdfrd's blog"/>#}
+                    <p>rcdfrd's blog</p>
+                </a>
+            </div>
+            <div class="site-search col-3 kit-hidden-tb">
+                <form id="search" method="get" action="{% url 'article:haystack_search' %}" role="search">
+                    <label for="q" class="sr-only">搜索关键字</label>
+                    <input type="text" id="q" name="q" class="text" placeholder="输入关键字搜索" required>
+                    <button type="submit" class="submit">搜索</button>
+                </form>
+            </div>
+            <div class="col-mb-12">
+                <nav id="nav-menu" class="clearfix" role="navigation">
+                    <a class="current" href="{% url 'article:article_list' %}">首页</a>
+                    {% get_pages as pages %}
+                    {% for page in pages %}
+                    <a href="{% url 'article:page_detail' page.slug %}"
+                       title="{{ page.title }}">{{ page.title }}</a>
+                    {% endfor %}
+                </nav>
+            </div>
+        </div><!-- end .row -->
+    </div>
+</header><!-- end #header -->

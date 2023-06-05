@@ -1,0 +1,137 @@
+{% load article_tags %}
+{% load static %}
+{% if article.allow_comment %}
+<div id="comments">
+    <h3>{% if comments.count == 0 %}
+        暂无评论
+    {% elif comments.count == 1 %}
+        仅有一条评论
+    {% else %}
+        共有{{ comments.count }}条评论
+    {% endif %}</h3>
+    <ol class="comment-list">
+        {% for comment in comments %}
+            {% if comment.is_parent %}
+                <li itemscope="" itemtype="https://schema.org/UserComments"
+                    class="comment-body comment-parent comment-odd">
+                    <div class="comment-author" itemprop="creator" itemscope="" itemtype="https://schema.org/Person">
+                        <span itemprop="image">
+                        <img class="avatar" src="{% get_gravatar_url comment.mail %}" alt="{{ comment.author }}"
+                             width="32"
+                             height="32"></span>
+                        <cite class="fn" itemprop="name"><a href="{{ comment.url }}"
+                                                            rel="external nofollow">{{ comment.author }}</a></cite>
+                    </div>
+                    <div class="comment-meta">
+                        {% if article %}
+                            <a href="{% url 'article:article_detail' article.slug %}#comment">
+                                <time itemprop="commentTime"
+                                      datetime={{ comment.created | date }}>{{ comment.created|date:"Y-m-d H:i" }}
+                                </time>
+                            </a>
+                        {% else %}
+                            <a href="{% url 'article:page_detail' page.slug %}#comment">
+                                <time itemprop="commentTime"
+                                      datetime={{ comment.created | date }}>{{ comment.created|date:"Y-m-d H:i" }}
+                                </time>
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div class="comment-content" itemprop="commentText">
+                        <p>{{ comment.body }}</p></div>
+                    <div class="comment-reply">
+                        <a href="?reply={{ comment.id }}#response" rel="nofollow">回复</a></div>
+                    <div class="comment-children" itemprop="discusses">
+
+                        <ol class="comment-list">
+                            {% for child in comment.children %}
+                                <li itemscope="" itemtype="https://schema.org/UserComments"
+                                    class="comment-body comment-child comment-level-odd comment-odd comment-by-author">
+                                    <div class="comment-author" itemprop="creator" itemscope=""
+                                         itemtype="https://schema.org/Person">
+                                    <span itemprop="image">
+                                    <img class="avatar" src="{% get_gravatar_url child.mail %}" alt="{{ child.author }}"
+                                         width="32"
+                                         height="32"></span>
+                                        <cite class="fn" itemprop="name"><a href="{{ child.url }}"
+                                                                            rel="external nofollow">{{ child.author }}</a></cite>
+                                    </div>
+                                    <div class="comment-meta">
+                                        {% if article %}
+                                            <a href="{% url 'article:article_detail' article.slug %}#comment">
+                                                <time itemprop="commentTime"
+                                                      datetime={{ child.created | date }}>{{ child.created|date:"Y-m-d H:i" }}
+                                                </time>
+                                            </a>
+                                        {% else %}
+                                            <a href="{% url 'article:page_detail' page.slug %}#comment">
+                                                <time itemprop="commentTime"
+                                                      datetime={{ child.created | date }}>{{ child.created|date:"Y-m-d H:i" }}
+                                                </time>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                    <div class="comment-content" itemprop="commentText">
+                                        <p>{{ child.body }}</p></div>
+
+
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    </div>
+                </li>
+
+
+            {% endif %}
+        {% endfor %}
+    </ol>
+
+
+    <h3 id="response">添加新评论</h3>
+    {% if reply_id %}
+        <div class="cancel-comment-reply">
+            <a id="cancel-comment-reply-link" href="./#response" rel="nofollow">取消回复</a></div>
+    {% endif %}
+    <form
+            {% if article %}
+                {% if reply_id %}
+                    method="post" action="{% url 'comment:post_article_reply' article.slug reply_id %}" id="comment-form"
+                    role="form">
+                {% else %}
+                    method="post" action="{% url 'comment:post_article_comment' article.slug %}" id="comment-form"
+                    role="form">
+                {% endif %}
+            {% else %}
+                {% if reply_id %}
+                    method="post" action="{% url 'comment:post_page_reply' page.slug reply_id %}" id="comment-form"
+                    role="form">
+                {% else %}
+                method="post" action="{% url 'comment:post_page_comment' page.slug %}" id="comment-form"
+                role="form">
+                    {% endif %}
+            {% endif %}
+    <p>
+        <label for="author" class="required">称呼</label>
+        <input type="text" name="author" id="author" class="text" value="{{ user.username }}" required="">
+    </p>
+    <p>
+        <label for="mail" class="required">Email</label>
+        <input type="email" name="mail" id="mail" class="text" value="{{ user.email }}" required="">
+    </p>
+    <p>
+        <label for="url">网站</label>
+        <input type="url" name="url" id="url" class="text" placeholder="https://" value="">
+    </p>
+    <p>
+        <label for="textarea" class="required">内容</label>
+        <label for="body"></label><textarea rows="8" cols="50" name="body" id="body" class="textarea"
+                                            required=""></textarea>
+    </p>
+    <p>
+        <button type="submit" class="submit">提交评论</button>
+    </p>
+    {% csrf_token %}
+    </form>
+
+</div>
+{% endif %}

@@ -1,0 +1,24 @@
+{% load static %}
+<!-- Footer -->1
+<footer id="footer" role="contentinfo">
+    &copy; 2022 <a href="{% url 'article:article_list' %}">rcdfrd's blog</a>.
+    由 <a href="{% url 'article:article_list' %}">rcdfrd</a> 强力驱动.
+    <script>
+        window.MathJax = {
+            chtml: {
+                displayAlign: "left"
+            },
+            tex: {
+                inlineMath: [["$", "$"], ["\\(", "\\)"]],
+                displayMath: [["$$", "$$"], ["\\[", "\\]"]]
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'a'],
+                ignoreHtmlClass: ["post-excerpt", "comment-content", "widget-list", "highlight"],
+                enableMenu: false,
+            }
+        };
+    </script>
+    <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script"></script>
+</footer><!-- end #footer -->
