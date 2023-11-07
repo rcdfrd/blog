@@ -1,0 +1,27 @@
+<footer>
+    <div class="footer-info">
+        {% now "Y" %} © {{ SITE_COPYRIGHT }}
+        | <a href="{% url 'article:list' %}">{{ SITE_NAME }}</a>
+    </div>
+</footer>
+
+<script> feather.replace(); </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        renderMathInElement(document.body, {
+            // customised options
+            // • auto-render specific keys, e.g.:
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+            ],
+            ignoredClasses: ["description"],
+            // • rendering keys, e.g.:
+            throwOnError: false
+        });
+    });
+
+</script>

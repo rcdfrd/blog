@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main_content %}
+    <main>
+        <article>
+            <div class="title">
+                <h1 class="title">{{ article.title }}</h1>
+                <div class="meta">
+                    Published by <a target="_blank">{{ article.author }}</a> on {{ article.created|date:'Y-m-d' }}
+                </div>
+            </div>
+            <section class="body">
+                {{ article.body | safe }}
+            </section>
+            <div class="post-tags">
+                <nav class="nav tags">
+                    <ul class="tags">
+                        {% for tag in article.tags.all %}
+                            <li><a href="{% url 'article:list_tag' tag %}">{{ tag }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </div>
+        </article>
+    </main>
+{% endblock main_content %}

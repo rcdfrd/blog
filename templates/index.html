@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main_content %}
+    <main class="list">
+        <div class="site-description">
+            <p>{{ SITE_DESCRIPTION }}</p>
+        </div>
+        <ul>
+            {% for article in object_list %}
+                <section class="list-item">
+                    <h1 class="title">
+                        <a href="{% url 'article:detail' article.slug %}"> {{ article.title }} </a>
+                    </h1>
+                    <time datetime="{{ article.created | time }}>"> {{ article.created|date:'Y-m-d' }} </time>
+                    <span>| Published by {{ article.author }} </span>
+                    <div class="description"> {{ article.excerpt }} </div>
+                    <a class="readmore" href="{% url 'article:detail' article.slug %}"> Read more ⟶ </a>
+                </section>
+            {% endfor %}
+        </ul>
+    </main>
+
+    {% if is_paginated %}
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <span class="page-item page-prev">
+                <a href="{% url 'article:list_page' page_obj.previous_page_number %}" class="page-link"
+
+
+                   aria-label="Previous"><span aria-hidden="true">← Previous</span></a>
+            </span>
+            {% endif %}
+
+            {% if page_obj.has_next %}
+                <span class="page-item page-next">
+                <a href="{% url 'article:list_page' page_obj.next_page_number %}" class="page-link" aria-label="Next">
+                    <span aria-hidden="true">Next →</span></a>
+            </span>
+            {% endif %}
+        </ul>
+    {% endif %}
+{% endblock main_content %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main_content %}
+    <h1 class="page-title">{{ PAGE_TITLE }}</h1>
+    <ul class="posts">
+        {% for article in object_list %}
+            <li class="post">
+                <a href="{% url 'article:detail' article.slug %}">{{ article.title }}</a>
+                <span class="meta">{{ article.created|date:'Y-m-d' }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock main_content %}

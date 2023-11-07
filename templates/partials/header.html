@@ -1,0 +1,38 @@
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% if article.title %}
+        <title>{{ article.title }}</title>
+        <meta property="og:title" content="{{ article.title }}"/>
+    {% elif page.title %}
+        <title>{{ page.title }}</title>
+        <meta property="og:title" content="{{ page.title }}"/>
+    {% else %}
+        <title>{{ TITLE }}</title>
+        <meta property="og:title" content="{{ TITLE }}"/>
+    {% endif %}
+
+    <meta property="og:description" content="{{ SITE_DESCRIPTION }}"/>
+    <meta name="description" content="{{ SITE_DESCRIPTION }}"/>
+    <link rel="icon" type="image/ico" href="{% static 'icon/favicon.ico' %}"/>
+
+    <script src="{% static 'js/feather.min.js' %}"></script>
+    {#https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.16.0/feather.min.js#}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/normalize.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/fonts.css' %}"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/main.css' %}"/>
+    <link rel="stylesheet" id="darkModeStyle" type="text/css" href="{% static 'css/dark.css' %}" disabled=true/>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+          integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
+    <!-- The loading of KaTeX is deferred to speed up page rendering -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"
+            integrity="sha384-cpW21h6RZv/phavutF+AuVYrr+dA8xD9zs6FwLpaCct6O9ctzYFfFr4dgmgccOTx"
+            crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+            integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05"
+            crossorigin="anonymous"></script>
+</head>

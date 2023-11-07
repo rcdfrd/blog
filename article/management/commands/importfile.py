@@ -5,7 +5,8 @@ from datetime import datetime
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from django.utils import timezone
-from article.models import ArticlePost, Category, Keyword, PagePost
+
+from article.models import ArticlePost, Tags
 
 
 class Command(BaseCommand):
@@ -23,12 +24,7 @@ class Command(BaseCommand):
         with open(json_path, 'r', encoding='utf-8') as f:
             f_json = json.load(f)
             f.close()
-        for c in f_json.get('categories'):
-            if not Category.objects.filter(slug=c.get('slug')).exists():
-                if c.get('description'):
-                    Category.objects.create(name=c.get('name'), slug=c.get('slug'), description=c.get('description'))
-                else:
-                    Category.objects.create(name=c.get('name'), slug=c.get('slug'))
+
         json_dir = os.path.dirname(json_path)
         for a in f_json.get('articles'):
             with open(os.path.join(json_dir, a.get('file')), 'r', encoding='utf-8') as f:
@@ -40,31 +36,27 @@ class Command(BaseCommand):
                 return
             b_time = datetime.strptime(a.get('date'), '%Y-%m-%d-%H:%M:%S')
             timestamp = timezone.make_aware(b_time)
-            category = Category.objects.get(slug=a.get('category'))
             slug = a.get('slug')
+            is_page = a.get('is_page') or False
+            publicity = a.get('publicity') or 'public'
             if ArticlePost.objects.filter(slug=slug).exists():
+                ArticlePost.objects.filter(slug=slug).update(author=User.objects.get(id=1), created=timestamp,
+                                                             updated=timestamp, title=title, body_md=body,
+                                                             is_page=is_page, publicity=publicity)
+                ArticlePost.objects.filter(slug=slug).first().save()
                 continue
             article = ArticlePost(author=User.objects.get(id=1), created=timestamp, updated=timestamp,
-                                  title=title, body=body, category=category, slug=slug)
+                                  title=title, body_md=body, slug=slug, is_page=is_page, publicity=publicity)
             article.save()
-            for k in a.get('keywords'):
-                if not Keyword.objects.filter(name=k):
-                    Keyword.objects.create(name=k)
-                article.keywords.add(Keyword.objects.get(name=k))
+            if not a.get('tags'):
+                article.check()
+                article.save()
+                continue
+            for tag in a.get('tags'):
+                if not Tags.objects.filter(name=tag):
+                    Tags.objects.create(name=tag)
+                article.tags.add(Tags.objects.get(name=tag))
             article.check()
             article.save()
-        for p in f_json.get('pages'):
-            title = p.get('title')
-            b_time = datetime.strptime(p.get('date'), '%Y-%m-%d-%H:%M:%S')
-            timestamp = timezone.make_aware(b_time)
-            order = p.get('order')
-            slug = p.get('slug')
-            with open(os.path.join(json_dir, p.get('file')), 'r', encoding='utf-8') as f:
-                body = f.read()
-                f.close()
-            if PagePost.objects.filter(slug=slug).exists():
-                continue
-            PagePost.objects.create(author=User.objects.get(id=1), created=timestamp, updated=timestamp,
-                                    title=title, body=body, order=order, slug=slug)
 
         self.stdout.write('Successfully insert blog data')
